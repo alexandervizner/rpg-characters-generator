@@ -6,7 +6,7 @@ class Constants {
 
     final static int MIN_REQUIRED_VALUES_COUNT = 2;
 
-    static final int MIN_REQUIRED_CHARACTER_ATTRS_SUM = 75;
+    final static int MIN_REQUIRED_CHARACTER_ATTRS_SUM = 75;
 
 }
 
