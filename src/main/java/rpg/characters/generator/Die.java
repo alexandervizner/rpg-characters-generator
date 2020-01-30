@@ -8,13 +8,13 @@ public class Die implements Comparable<Die> {
         as well as its value once it will be rolled.
      */
 
-    private final static int D4 = 4;
-    private final static int D6 = 6;
-    private final static int D8 = 8;
-    private final static int D10 = 10;
-    private final static int D12 = 12;
-    private final static int D20 = 20;
-    private final static int[] VALID_DICE_TYPES = {D4, D6, D8, D10, D12, D20};
+    public final static int D4 = 4;
+    public final static int D6 = 6;
+    public final static int D8 = 8;
+    public final static int D10 = 10;
+    public final static int D12 = 12;
+    public final static int D20 = 20;
+    public final static int[] VALID_DICE_TYPES = {D4, D6, D8, D10, D12, D20};
 
     private int faces;
     private int value;
@@ -27,8 +27,16 @@ public class Die implements Comparable<Die> {
         if (Arrays.stream(VALID_DICE_TYPES).noneMatch(i -> i == faces)) {
             throw new IllegalArgumentException();
         }
-
         this.faces = faces;
+    }
+
+    public Die(int faces, int value) {
+        this(faces);
+
+        if (value < 1 && value > faces) {
+            throw new IllegalArgumentException();
+        }
+        this.value = value;
     }
 
     public int getFaces() {
@@ -37,10 +45,6 @@ public class Die implements Comparable<Die> {
 
     public int getValue() {
         return this.value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     @Override

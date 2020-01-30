@@ -1,48 +1,42 @@
 package rpg.characters.generator;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 class DiceRoller {
     /*
         Main class which does all the magic of random attributes generation.
      */
 
-    private List<Die> dicePool;
+    private final static int DEFAULT_DICE_NUMBER = 4;
+
+    private Die[] dicePool;
     private Random random;
 
-    public DiceRoller(List<Die> dicePool) {
-        this.dicePool = dicePool;
-        this.random = new Random();
+    public DiceRoller() {
+        this(DEFAULT_DICE_NUMBER);
     }
 
-    public List<Die> getDice() {
+    public DiceRoller(int diceNumber) {
+        this.dicePool = new Die[diceNumber];
+        random = new Random();
+    }
+
+    public Die[] getDicePool() {
         return dicePool;
     }
 
-    public void setDice(List<Die> diceCup) {
-        this.dicePool = diceCup;
-    }
-
-    public void rollDice() {
-        for (Die die : dicePool) {
-            die.setValue(random.nextInt(die.getFaces()) + 1);
+    public void roll() {
+        for (int i = 0; i < dicePool.length; i++) {
+            dicePool[i] = new Die(Die.D6, random.nextInt(6) + 1);
         }
-    }
-
-    public int rollDiscardingLowest() {
-        rollDice();
-
-        return getSumDiscardingLowest(dicePool);
     }
 
     public List<Integer> getAttributes() {
         List<Integer> attributes = new ArrayList<>();
 
         while (attributes.size() < Character.ATTRS_NUMBER) {
-            attributes.add(rollDiscardingLowest());
+            roll();
+            attributes.add(getSumDiscardingLowest(dicePool));
         }
 
         return attributes;
@@ -58,10 +52,10 @@ class DiceRoller {
         return attributes;
     }
 
-    public int getSumDiscardingLowest(List<Die> dice) {
-        dice.sort(Comparator.reverseOrder());
+    public int getSumDiscardingLowest(Die[] dice) {
+        Arrays.sort(dice);
 
-        return dice.subList(0, dice.size() - 1).stream().mapToInt(Die::getValue).sum();
+        return Arrays.stream(dice, 1, dice.length).mapToInt(Die::getValue).sum();
     }
 
     public boolean isMeetRequirements(List<Integer> attributes) {
